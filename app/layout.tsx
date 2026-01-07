@@ -9,7 +9,7 @@ const pressStart2P = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "Anime Lens Photobooth",
+  title: "Jovanka Photobooth Bounty",
   description: "Pixelated anime photobooth experience",
 };
 

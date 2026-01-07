@@ -42,33 +42,27 @@ export default function Camera() {
   const capturePhotoNowRef = useRef<(() => Promise<void>) | null>(null);
 
   // Helper to load Fabric images using a Promise (wraps callback-style fromURL)
-  const loadImageFromURL = async (url: string, attempts = 3): Promise<fabric.Image> => {
-    // Try multiple times to load the image (helps with flaky network or local dev timing)
-    const opts = { crossOrigin: 'anonymous' } as unknown as object;
+const loadImageFromURL = async (
+  url: string,
+  attempts = 3
+): Promise<fabric.Image> => {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const img = await fabric.Image.fromURL(url, {
+        crossOrigin: 'anonymous',
+      })
 
-    for (let i = 0; i < attempts; i++) {
-      try {
-        const img = await new Promise<fabric.Image>((resolve, reject) => {
-          try {
-            fabric.Image.fromURL(url, opts, (img?: fabric.Image) => {
-              if (img) resolve(img as fabric.Image);
-              else reject(new Error('Failed to load image: ' + url));
-            });
-          } catch (e) {
-            reject(e);
-          }
-        });
-
-        return img;
-        } catch (err) {
-        console.warn(`loadImageFromURL attempt ${i + 1} failed for ${url}:`, err);
-        // small delay before retry
-        await new Promise((r) => setTimeout(r, 150));
-      }
+      if (!img) throw new Error('Image is null')
+      return img
+    } catch (err) {
+      console.warn(`loadImageFromURL attempt ${i + 1} failed for ${url}`, err)
+      await new Promise((r) => setTimeout(r, 150))
     }
+  }
 
-    throw new Error('Failed to load image after retries: ' + url);
-  };
+  throw new Error('Failed to load image after retries: ' + url)
+}
+
 
   // Show errors briefly in UI
   const showTemporaryError = (msg: string, ms = 6000) => {
@@ -658,7 +652,7 @@ export default function Camera() {
               fontFamily: 'var(--font-press-start)',
             }}
           >
-            NAKAMA BOOTH
+            JOVANKA PHOTOBOOTH
           </h1>
           <button
             onClick={() => {
