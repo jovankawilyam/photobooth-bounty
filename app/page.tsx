@@ -109,7 +109,7 @@ const loadImageFromURL = async (
   // Start countdown before capture
   const startCountdown = () => {
     setIsCountingDown(true);
-    setCountdown(3);
+    setCountdown(5);
   };
 
   // Countdown effect
